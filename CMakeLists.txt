@@ -1,0 +1,67 @@
+cmake_minimum_required(VERSION 3.0)
+
+#------------------------------------------------
+# Project + basics
+#
+
+project(RasterizedGlyphSet)
+
+set(${PROJECT_NAME}_MAJOR_VERSION 0)
+set(${PROJECT_NAME}_MINOR_VERSION 1)
+set(${PROJECT_NAME}_PATCH_VERSION 0)
+set(${PROJECT_NAME}_VERSION ${${PROJECT_NAME}_MAJOR_VERSION}.${${PROJECT_NAME}_MINOR_VERSION}.${${PROJECT_NAME}_PATCH_VERSION})
+
+#-----------------------------------------------
+# Installation paths
+#
+
+# Offer the user the choice of overriding the installation directories
+#set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
+#set(INSTALL_BIN_DIR bin CACHE PATH "Installation directory for executables")
+set(INSTALL_INCLUDE_DIR include CACHE PATH "Installation directory for header files")
+if(WIN32 AND NOT CYGWIN)
+	set(DEF_INSTALL_CMAKE_DIR CMake)
+else()
+	set(DEF_INSTALL_CMAKE_DIR lib/CMake/${PROJECT_NAME})
+endif()
+set(INSTALL_CMAKE_DIR ${DEF_INSTALL_CMAKE_DIR} CACHE PATH "Installation directory for CMake files")
+ 
+# Make relative paths absolute (needed later on)
+foreach(p LIB BIN INCLUDE CMAKE)
+	set(var INSTALL_${p}_DIR)
+	if(NOT IS_ABSOLUTE "${${var}}")
+		set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
+	endif()
+endforeach()
+
+#------------------------------------------------
+# Targets
+#
+
+file(GLOB HEADERS *.hpp)
+
+# Header-only library
+add_library( ${PROJECT_NAME} INTERFACE)
+
+#------------------------------------------------
+# Installing
+#
+
+# Note: we use "gpc" as a vendor prefix (subdir in include directory e.a.)
+
+install(TARGETS ${PROJECT_NAME}
+	EXPORT GPC${PROJECT_NAME}
+)
+
+install(FILES ${HEADERS} DESTINATION "${INSTALL_INCLUDE_DIR}/gpc/")
+
+ # Install the export set for use with the install-tree
+install(EXPORT GPC${PROJECT_NAME} DESTINATION "${INSTALL_CMAKE_DIR}")
+
+#------------------------------------------------
+# Exporting the build tree
+#
+
+# Export the package for use from the build tree
+# (registers the build tree with a global CMake registry)
+export(PACKAGE ${PROJECT_NAME})
