@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.0)
 # Project + basics
 #
 
-project(RasterizedGlyphSet)
+project(GPCFonts)
 
 set(${PROJECT_NAME}_MAJOR_VERSION 0)
 set(${PROJECT_NAME}_MINOR_VERSION 1)
