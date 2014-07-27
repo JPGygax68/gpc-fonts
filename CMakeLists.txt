@@ -35,33 +35,18 @@ foreach(p LIB BIN INCLUDE CMAKE)
 endforeach()
 
 #------------------------------------------------
-# Targets
+# Target: header-only library
 #
 
-file(GLOB HEADERS *.hpp)
-
-# Header-only library
-add_library( ${PROJECT_NAME} INTERFACE)
+add_subdirectory(inc)
 
 #------------------------------------------------
-# Installing
+# Tests
 #
 
-# Note: we use "gpc" as a vendor prefix (subdir in include directory e.a.)
+enable_testing()
 
-install(TARGETS ${PROJECT_NAME}
-	EXPORT GPC${PROJECT_NAME}
-)
+# Not working under Visual Studio: will build the tests but won't run them
+add_custom_target(CHECK COMMAND ${CMAKE_CTEST_COMMAND})
 
-install(FILES ${HEADERS} DESTINATION "${INSTALL_INCLUDE_DIR}/gpc/")
-
- # Install the export set for use with the install-tree
-install(EXPORT GPC${PROJECT_NAME} DESTINATION "${INSTALL_CMAKE_DIR}")
-
-#------------------------------------------------
-# Exporting the build tree
-#
-
-# Export the package for use from the build tree
-# (registers the build tree with a global CMake registry)
-export(PACKAGE ${PROJECT_NAME})
+add_subdirectory(tests)

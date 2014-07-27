@@ -1,0 +1,10 @@
+
+find_package(boost COMPONENTS unit_test_framework REQUIRED)
+
+add_executable(test_rasterizedglyphset EXCLUDE_FROM_ALL test_rasterizedglyphset.cpp)
+
+target_include_directories(test_rasterizedglyphset PRIVATE ${CMAKE_SOURCE_DIR}/inc)
+target_link_libraries(test_rasterizedglyphset ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+
+add_dependencies(CHECK test_rasterizedglyphset)
+add_test(NAME test_rasterizedglyphset COMMAND test_rasterizedglyphset)
