@@ -1,3 +1,8 @@
+2014-07-27
+==========
+
+- I think the bitmap should actually be one-dimensional for simplicity. This would make things simpler, waste less space, and give more options when using the bitmap later on.
+
 2014-07-26
 ==========
 

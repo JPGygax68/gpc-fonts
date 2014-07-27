@@ -23,23 +23,11 @@ namespace RASTERIZED_GLYPHSET_NS {
     struct RasterizedGlyphSet {
     public:
 
-        typedef unsigned long   CodePoint;
-        typedef unsigned long   CharCount;
-        typedef unsigned int    Index;
-        typedef unsigned char   Pixel;          // grayscale pixel: one unsigned byte
-        typedef unsigned int    Size;
-        typedef int             Offset;
-
-        struct Bitmap {
-            Size width, height;
-            std::vector<Pixel> pixels;
-        };
+        typedef unsigned long       CodePoint;
+        typedef unsigned char       Pixel;          // grayscale pixel: one unsigned byte
 
         struct GlyphInfo {
-            Index bitmap_index;
-            struct {
-                Offset left, top;
-            } position;             // position of box within bitmap
+            size_t pixel_base;      // where pixels for this glyph start
             struct {
                 int width, rows;    // width and height of the rasterized glyph image
                 int left, top;      // offset from origin of top-left corner (positive = right and up)
@@ -50,16 +38,16 @@ namespace RASTERIZED_GLYPHSET_NS {
         };
 
         struct Range {
-            CodePoint start;
-            CharCount count;
+            CodePoint   start;
+            size_t      count;
         };
 
-        std::vector<Bitmap>     bitmaps;
+        std::vector<Pixel>      pixels;
         std::vector<GlyphInfo>  glyphs;
         std::vector<Range>      index;
 
         auto findGlyph(CodePoint cp) -> GlyphInfo * {
-            size_t base = 0;
+            size_t base = 0; // base glyph index for current range
             for (auto range_it = index.begin(); range_it != index.end(); base += (*range_it).count, range_it++)
                 if (cp >= (*range_it).start && cp < ((*range_it).start + (*range_it).count))
                     return &glyphs[base + (cp - (*range_it).start)];
