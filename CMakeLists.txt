@@ -38,7 +38,7 @@ endforeach()
 # Target: header-only library
 #
 
-add_subdirectory(inc)
+add_subdirectory(include)
 
 #------------------------------------------------
 # Tests
