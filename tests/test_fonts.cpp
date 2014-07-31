@@ -1,7 +1,7 @@
 #define BOOST_TEST_MODULE rasterizedglyphset
 #include <boost/test/unit_test.hpp>
 
-#include <gpc/fonts/RasterGlyphCBox.hpp>
+#include <gpc/fonts/RasterizedGlyphCBox.hpp>
 
 using namespace gpc;
 

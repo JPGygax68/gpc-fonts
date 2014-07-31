@@ -41,11 +41,13 @@ install(FILES
   DESTINATION CMake)
 
 #------------------------------------------------
-# Exporting the build tree
+# Exporting the build tree / source tree
 #
 
 # We use the short form here (ie. "EXPORT" instead of "TARGETS": we reuse the target set defined by install(TARGETS..):
-export(EXPORT ${TARGET_NAME}-targets)
+#export(EXPORT ${TARGET_NAME}-targets)
+
+export(TARGETS ${TARGET_NAME} FILE ${TARGET_NAME}-targets.cmake)
 
 # Registers the build tree (of this sub-project) with a global CMake registry:
 export(PACKAGE ${TARGET_NAME})
