@@ -39,15 +39,13 @@ namespace gpc {
             std::vector<GlyphRange> index;
             std::vector<Variant>    variants;
 
-			/* Re-code (if needed) to account for font variants
-            auto findGlyph(uint32_t cp) -> GlyphRecord * {
+            auto findGlyph(uint32_t cp) const -> int {
                 size_t base = 0; // base glyph index for current range
-                for (auto range_it = index.begin(); range_it != index.end(); base += (*range_it).count, range_it++)
-                    if (cp >= (*range_it).starting_codepoint && cp < ((*range_it).starting_codepoint + (*range_it).count))
-                        return &glyphs[base + (cp - (*range_it).starting_codepoint)];
-                return nullptr;
+				for (auto range_it = index.begin(); range_it != index.end(); base += (*range_it).count, range_it++)
+					if (cp >= (*range_it).starting_codepoint && cp < ((*range_it).starting_codepoint + (*range_it).count))
+						return base + (cp - (*range_it).starting_codepoint);
+                return -1;
             }
-			*/
         };
 
     } // ns fonts
