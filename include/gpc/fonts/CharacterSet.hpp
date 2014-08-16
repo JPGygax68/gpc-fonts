@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cassert>
+#include <algorithm>
 
 #include "./CharacterRange.hpp"
 
@@ -10,9 +11,25 @@ namespace gpc {
     
         class CharacterSet {
         public:
-            auto add(uint32_t ch) -> CharacterSet & {
-                _ranges.emplace_back<CharacterRange>({ ch, 1 });
-                collate();
+            auto add(uint32_t start, uint32_t count = 1) -> CharacterSet & {
+                using namespace std;
+                
+                // Find where to insert the new range
+                auto it = begin(_ranges);
+                while (it != end(_ranges) && start > (it->starting_codepoint + it->count)) it++;
+                uint32_t first = it != end(_ranges) ? min(start, it->starting_codepoint) : start;
+
+                // Find out how many of the successors the new range will replace, and what last character is
+                auto it2 = it;
+                while (it2 != end(_ranges) && (start + count) > it2->starting_codepoint) it2++;
+                uint32_t last = it2 != end(_ranges) ? it2->starting_codepoint + it2->count : start + count;
+
+                // Erase the successors that are no longer needed
+                _ranges.erase(it, it2 != end(_ranges) ? it2 + 1 : end(_ranges));
+
+                // Insert our new range
+                _ranges.emplace_back<CharacterRange>({ first, last - first });
+
                 return *this;
             }
 
@@ -25,23 +42,6 @@ namespace gpc {
             auto ranges() const -> const std::vector<CharacterRange> & { return _ranges; }
 
         private:
-
-            void collate() {
-                assert(!_ranges.empty());
-                size_t i = 0;
-                while (i < _ranges.size()) {
-                    auto &current = _ranges[i];
-                    while ((i + 1) < _ranges.size()) {
-                        auto &succ = _ranges[i + 1];
-                        if (succ.starting_codepoint == current.starting_codepoint + current.count) {
-                            current.count += succ.count;
-                            _ranges.erase(_ranges.begin() + i + 1);
-                        }
-                        else break;
-                    }
-                    i++;
-                }
-            }
 
             std::vector<CharacterRange> _ranges;
         };
