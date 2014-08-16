@@ -46,7 +46,6 @@ add_subdirectory(include)
 
 enable_testing()
 
-# Not working under Visual Studio: will build the tests but won't run them
-add_custom_target(CHECK COMMAND ${CMAKE_CTEST_COMMAND})
+add_custom_target(build_and_test "${CMAKE_CTEST_COMMAND} -V")
 
 add_subdirectory(tests)
