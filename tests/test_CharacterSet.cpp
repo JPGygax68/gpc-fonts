@@ -71,9 +71,9 @@ BOOST_AUTO_TEST_CASE(test_filling_gap_between_ranges_fuses_ranges_into_one)
     fonts::CharacterSet cs;
 
     cs.add(65, 10);
-    cs.add(85, 10);
+    cs.add(76, 10);
     BOOST_CHECK(cs.ranges().size() == 2);
 
-    cs.add(75, 10);
+    cs.add(75);
     BOOST_CHECK(cs.ranges().size() == 1);
 }

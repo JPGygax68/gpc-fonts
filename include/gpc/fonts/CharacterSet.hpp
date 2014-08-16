@@ -17,18 +17,28 @@ namespace gpc {
                 // Find where to insert the new range
                 auto it = begin(_ranges);
                 while (it != end(_ranges) && start > (it->starting_codepoint + it->count)) it++;
-                uint32_t first = it != end(_ranges) ? min(start, it->starting_codepoint) : start;
+                
+                // After last current range ?
+                if (it == end(_ranges)) {
+                    _ranges.emplace_back<CharacterRange>({start, count});
+                }
+                // No: beginning before or inside an existing range, or appending to one
+                else {
+                    uint32_t first = min(it->starting_codepoint, start);
 
-                // Find out how many of the successors the new range will replace, and what last character is
-                auto it2 = it;
-                while (it2 != end(_ranges) && (start + count) > it2->starting_codepoint) it2++;
-                uint32_t last = it2 != end(_ranges) ? it2->starting_codepoint + it2->count : start + count;
+                    // Find last of the successors we'll replace
+                    auto it2 = it;
+                    for (auto itn = it2; ++itn != end(_ranges) && (start + count) >= itn->starting_codepoint; it2 = itn);
 
-                // Erase the successors that are no longer needed
-                _ranges.erase(it, it2 != end(_ranges) ? it2 + 1 : end(_ranges));
+                    // Compute last (+1: non-inclusive) character in new range
+                    uint32_t last = max(start + count, it2->starting_codepoint + it2->count);
 
-                // Insert our new range
-                _ranges.emplace_back<CharacterRange>({ first, last - first });
+                    // Erase the ranges we're replacing
+                    _ranges.erase(it, it2 + 1);
+
+                    // Insert our new range
+                    _ranges.emplace_back<CharacterRange>({ first, last - first });
+                }
 
                 return *this;
             }
