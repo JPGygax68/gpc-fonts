@@ -4,7 +4,7 @@
 #include <cstdint>
 
 #include "RasterizedGlyphCBox.hpp"
-#include "GlyphRange.hpp"
+#include "CharacterRange.hpp"
 
 namespace gpc {
 
@@ -36,8 +36,8 @@ namespace gpc {
 				std::vector<GlyphRecord> glyphs;
             };
 
-            std::vector<GlyphRange> index;
-            std::vector<Variant>    variants;
+            std::vector<CharacterRange> index;
+            std::vector<Variant>        variants;
 
             auto findGlyph(uint32_t cp) const -> int {
                 size_t base = 0; // base glyph index for current range

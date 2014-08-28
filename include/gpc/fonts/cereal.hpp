@@ -7,7 +7,7 @@
 namespace cereal {
 
 	template <class Archive>
-	void serialize(Archive & archive, gpc::fonts::GlyphRange &range)
+	void serialize(Archive & archive, gpc::fonts::CharacterRange &range)
 	{
 		archive(range.starting_codepoint, range.count);
 	}
