@@ -27,16 +27,17 @@ THE SOFTWARE.
 #include <cassert>
 #include <algorithm>
 
-#include "./CharacterRange.hpp"
+#include "./character_range.hpp"
 
 namespace gpc {
 
     namespace fonts {
     
-        class CharacterSet {
+        class character_set {
         public:
 
-            auto add(uint32_t start, uint32_t count = 1) -> CharacterSet & {
+            auto add(uint32_t start, uint32_t count = 1) -> character_set &
+            {
                 /** TODO: implement an internal version that returns a reference to the _ranges
                 iterator where the added range has been stored. This will make it easier
                 to implement an efficient merge function.
@@ -48,8 +49,9 @@ namespace gpc {
                 while (it != end(_ranges) && start > (it->starting_codepoint + it->count)) it++;
                 
                 // After last current range ?
-                if (it == end(_ranges)) {
-                    _ranges.emplace_back<CharacterRange>({start, count});
+                if (it == end(_ranges)) 
+                {
+                    _ranges.emplace_back<character_range>({start, count});
                 }
                 // No: beginning before or inside an existing range, or appending to one
                 else {
@@ -72,7 +74,8 @@ namespace gpc {
                 return *this;
             }
 
-            auto add(const CharacterRange &range) -> CharacterSet & {
+            auto add(const character_range &range) -> character_set &
+            {
                 return add(range.starting_codepoint, range.count);
             }
 
@@ -80,23 +83,27 @@ namespace gpc {
                 be found. As this should be the exception, removing a range is not supported
                 here.
              */
-            auto remove(uint32_t ch) -> CharacterSet & {
+            auto remove(uint32_t ch) -> character_set & 
+            {
                 using namespace std;
 
-                for (auto it = begin(_ranges); it != end(_ranges); it++) {
-                    if (it->contains(ch)) {
+                for (auto it = begin(_ranges); it != end(_ranges); it++) 
+                {
+                    if (it->contains(ch)) 
+                    {
                         if (it->starting_codepoint == ch) {
                             it->starting_codepoint++;
                             it->count--;
                         }
-                        else if (ch == it->starting_codepoint + it->count - 1) {
+                        else if (ch == it->starting_codepoint + it->count - 1) 
+                        {
                             it->count--;
                         }
                         else {
                             uint32_t offset = ch - it->starting_codepoint;
                             uint32_t remaining = it->count - offset;
                             it->count = offset;
-                            _ranges.emplace<CharacterRange>(it + 1, { it->starting_codepoint + offset + 1, remaining });
+                            _ranges.emplace<character_range>(it + 1, { it->starting_codepoint + offset + 1, remaining });
                         }
                     }
                     break; // we're done
@@ -104,17 +111,18 @@ namespace gpc {
                 return *this;
             }
 
-            bool contains(uint32_t ch) const {
+            bool contains(uint32_t ch) const 
+            {
                 for (const auto &range : _ranges)
                     if (range.contains(ch)) return true;
                 return false;
             }
 
-            auto ranges() const -> const std::vector<CharacterRange> & { return _ranges; }
+            auto ranges() const -> const std::vector<character_range> & { return _ranges; }
 
         private:
 
-            std::vector<CharacterRange> _ranges;
+            std::vector<character_range> _ranges;
         };
         
     } // ns fonts

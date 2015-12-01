@@ -6,11 +6,11 @@ project(libGPCFonts CXX)
 
 # List of header files (header-only library)
 set(HEADER_FILES
-  include/gpc/fonts/RasterizedFont.hpp 
-  include/gpc/fonts/CharacterRange.hpp 
-  include/gpc/fonts/CharacterSet.hpp 
-  include/gpc/fonts/BoundingBox.hpp 
-  include/gpc/fonts/RasterizedGlyphCBox.hpp 
+  include/gpc/fonts/rasterized_font.hpp 
+  include/gpc/fonts/character_range.hpp 
+  include/gpc/fonts/character_set.hpp 
+  include/gpc/fonts/bounding_box.hpp 
+  include/gpc/fonts/rasterized_glyph_cbox.hpp 
   include/gpc/fonts/cereal.hpp
 )
 
@@ -28,7 +28,7 @@ endif()
 
 target_include_directories(libGPCFonts INTERFACE $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
 
-add_executable(testsuite testsuite/test.cpp)
+add_executable(testsuite testsuite/test.cpp ${HEADER_FILES})
 target_link_libraries(testsuite libGPCFonts)
 
 # Boost
