@@ -79,7 +79,7 @@ namespace gpc {
                 return add(range.starting_codepoint, range.count);
             }
 
-            /** The remove() method is intended to scratch off characters whose glyph cannot
+            /** The remove() method is intended to scratch off characters whose glyphs cannot
                 be found. As this should be the exception, removing a range is not supported
                 here.
              */
@@ -113,12 +113,12 @@ namespace gpc {
 
             bool contains(uint32_t ch) const 
             {
-                for (const auto &range : _ranges)
-                    if (range.contains(ch)) return true;
-                return false;
+                using namespace std;
+
+                return any_of(begin(_ranges), end(_ranges), [&](auto range) { return range.contains(ch); });
             }
 
-            auto ranges() const -> const std::vector<character_range> & { return _ranges; }
+            auto& ranges() const { return _ranges; }
 
         private:
 
