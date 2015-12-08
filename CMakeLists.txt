@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 # Project name
-project(libGPCFonts CXX)
+project(libgpcfonts CXX)
 
 # List of header files (header-only library)
 set(HEADER_FILES
@@ -15,21 +15,21 @@ set(HEADER_FILES
 )
 
 # Create the (main) target
-add_library(libGPCFonts INTERFACE)
+add_library(${PROJECT_NAME} INTERFACE)
 
 if(MSVC)
-    target_compile_options(libGPCFonts INTERFACE /DNOMINMAX /W4)
+    target_compile_options(${PROJECT_NAME} INTERFACE /DNOMINMAX /W4)
 else()
-    target_compile_options(libGPCFonts INTERFACE -pedantic -Wall -std=c++11)
+    target_compile_options(${PROJECT_NAME} INTERFACE -pedantic -Wall -std=c++11)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-        target_compile_options(libGPCFonts INTERFACE -stdlib=libc++)
+        target_compile_options(${PROJECT_NAME} INTERFACE -stdlib=libc++)
     endif()
 endif()
 
-target_include_directories(libGPCFonts INTERFACE $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
+target_include_directories(${PROJECT_NAME} INTERFACE $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
 
 add_executable(testsuite testsuite/test.cpp ${HEADER_FILES})
-target_link_libraries(testsuite libGPCFonts)
+target_link_libraries(testsuite ${PROJECT_NAME})
 
 # Boost
 if (NOT BOOST_ROOT)
@@ -46,7 +46,7 @@ add_test(NAME testsuite COMMAND testsuite CONFIGURATIONS Debug)
 #------------------------------------------------
 # Installation - specify files to package
 
-install(TARGETS libGPCFonts EXPORT libGPCFontsTargets
+install(TARGETS ${PROJECT_NAME} EXPORT ${PROJECT_NAME}-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
@@ -57,10 +57,10 @@ install(FILES ${HEADER_FILES} DESTINATION include/gpc/fonts)
 include(CmakePackageConfigHelpers)
 
 # installation - build tree specific package config files
-export(EXPORT libGPCFontsTargets FILE ${CMAKE_BINARY_DIR}/libGPCFontsTargets.cmake)
-set(PACKAGE_NAME libGPCFonts)
+export(EXPORT ${PROJECT_NAME}-targets FILE ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-targets.cmake)
+set(PACKAGE_NAME ${PROJECT_NAME})
 configure_file(${PROJECT_SOURCE_DIR}/ProjectConfig.cmake.in
-    ${CMAKE_BINARY_DIR}/libGPCFontsConfig.cmake
+    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-config.cmake
     @ONLY
 )
 
@@ -68,11 +68,11 @@ configure_file(${PROJECT_SOURCE_DIR}/ProjectConfig.cmake.in
 # Export build tree
 #
 
-export(PACKAGE libGPCFonts)
+export(PACKAGE ${PROJECT_NAME})
 
-# installation - relocatable package config files
+# Installation - relocatable package config files
 configure_package_config_file(${PROJECT_SOURCE_DIR}/ProjectConfig.cmake.in
-  ${CMAKE_CURRENT_BINARY_DIR}/cmake/libGPCFontsConfig.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}-config.cmake
   INSTALL_DESTINATION cmake
 )
 
@@ -80,11 +80,11 @@ configure_package_config_file(${PROJECT_SOURCE_DIR}/ProjectConfig.cmake.in
 # Installation (final part)
 #
 
-install(EXPORT libGPCFontsTargets
-  FILE libGPCFontsTargets.cmake
+install(EXPORT ${PROJECT_NAME}-targets
+  FILE ${PROJECT_NAME}-targets.cmake
   DESTINATION "cmake"
 )
 install(FILES
-  ${CMAKE_BINARY_DIR}/cmake/libGPCFontsConfig.cmake
+  ${CMAKE_BINARY_DIR}/cmake/${PROJECT_NAME}-config.cmake
   DESTINATION "cmake"
 )

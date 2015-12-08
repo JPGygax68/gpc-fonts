@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BoundingBox.hpp"
+#include "bounding_box.hpp"
 
 namespace gpc {
 
@@ -8,7 +8,7 @@ namespace gpc {
     
         /* Rasterized Glyph Control Box
          */         
-        struct RasterizedGlyphCBox: public BoundingBox {
+        struct rasterized_glyph_cbox: public bounding_box {
             int adv_x, adv_y;
         };
         

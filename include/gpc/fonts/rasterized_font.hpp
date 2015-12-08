@@ -4,9 +4,9 @@
 #include <cstdint>
 #include <algorithm>
 
-#include "RasterizedGlyphCBox.hpp"
-#include "CharacterRange.hpp"
-#include "BoundingBox.hpp"
+#include "rasterized_glyph_cbox.hpp"
+#include "character_range.hpp"
+#include "bounding_box.hpp"
 
 namespace gpc {
 
@@ -24,24 +24,24 @@ namespace gpc {
             nothing but trivial or STL types.
         */
 
-        struct RasterizedFont {
+        struct rasterized_font {
         public:
 
-            struct GlyphRecord {
-                RasterizedGlyphCBox cbox;
+            struct glyph_record {
+                rasterized_glyph_cbox cbox;
                 size_t pixel_base;      // offset in pixel buffer where this glyph starts
             };
             
             // Contains the data specific to a given size/style combination
-            struct Variant {
+            struct variant {
                 std::vector<uint8_t> pixels;
-                std::vector<GlyphRecord> glyphs;
+                std::vector<glyph_record> glyphs;
             };
 
-            std::vector<CharacterRange> index;
-            std::vector<Variant>        variants;
+            std::vector<character_range> index;
+            std::vector<variant>        variants;
 
-            auto findGlyph(uint32_t cp) const -> int {
+            auto find_glyph(uint32_t cp) const -> int {
 
                 size_t base = 0; // base glyph index for current range
                 for (auto range_it = index.begin(); range_it != index.end(); base += (*range_it).count, range_it++)
@@ -52,7 +52,7 @@ namespace gpc {
             
             // TODO: make this capable of working with vertical scripts
             
-            auto computeTextExtents(int variant, const char32_t *text, size_t count) const -> BoundingBox {
+            auto compute_text_extents(int variant, const char32_t *text, size_t count) const -> bounding_box {
 
                 // TODO: the implementation should be inherited from (or forwarded to) a generic routine
 
@@ -60,7 +60,7 @@ namespace gpc {
 
                 if (count > 0) {
                     auto &var = variants[variant];
-                    auto *glyph = &var.glyphs[ findGlyph(*text) ];
+                    auto *glyph = &var.glyphs[ find_glyph(*text) ];
                     x_min = glyph->cbox.x_min;
                     size_t i = 0;
                     int x = 0;
@@ -69,7 +69,7 @@ namespace gpc {
                         y_min = std::min(y_min, cbox.y_min);
                         y_max = std::max(y_max, cbox.y_max);
                         if (++i == count) break;
-                        glyph = &var.glyphs[findGlyph(text[i])];
+                        glyph = &var.glyphs[find_glyph(text[i])];
                         x += glyph->cbox.adv_x;
                     }
                     x_max = x + glyph->cbox.x_max;
