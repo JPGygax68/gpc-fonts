@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.0)
 
 # Project name
-project(libgpcfonts CXX)
+project(libGPCFonts CXX)
 
 # List of header files (header-only library)
 set(HEADER_FILES
@@ -28,8 +28,8 @@ endif()
 
 target_include_directories(${PROJECT_NAME} INTERFACE $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
 
-add_executable(testsuite testsuite/test.cpp ${HEADER_FILES})
-target_link_libraries(testsuite ${PROJECT_NAME})
+add_executable(gpcfonts_testsuite testsuite/test.cpp ${HEADER_FILES})
+target_link_libraries(gpcfonts_testsuite ${PROJECT_NAME})
 
 # Boost
 if (NOT BOOST_ROOT)
@@ -38,10 +38,12 @@ endif()
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost REQUIRED COMPONENTS unit_test_framework)
-target_include_directories(testsuite PRIVATE ${Boost_INCLUDE_DIRS})
-target_link_libraries(testsuite ${Boost_LIBRARIES})
+target_include_directories(gpcfonts_testsuite PRIVATE ${Boost_INCLUDE_DIRS})
+target_link_libraries(gpcfonts_testsuite ${Boost_LIBRARIES})
 
-add_test(NAME testsuite COMMAND testsuite CONFIGURATIONS Debug)
+add_test(NAME ${PROJECT_NAME}_Test COMMAND gpcfonts_testsuite CONFIGURATIONS Debug)
+
+if (0)
 
 #------------------------------------------------
 # Installation - specify files to package
@@ -88,3 +90,5 @@ install(FILES
   ${CMAKE_BINARY_DIR}/cmake/${PROJECT_NAME}-config.cmake
   DESTINATION "cmake"
 )
+
+endif(0) # do not install or export
