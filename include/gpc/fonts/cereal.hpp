@@ -24,19 +24,19 @@ namespace cereal {
 		archive(var.glyphs, var.pixels);
 	}
 
-	template <class Archive>
+    template <class Archive>
+    void serialize(Archive & archive, gpc::fonts::bounding_box &box)
+    {
+        archive(box.x_min, box.x_max, box.y_min, box.y_max);
+    }
+
+    template <class Archive>
     void serialize(Archive & archive, gpc::fonts::rasterized_glyph_cbox &cbox)
     {
         archive(cbox.bounds);
         archive(cbox.adv_x);
         archive(cbox.adv_y);
     }
-
-    template <class Archive>
-    void serialize(Archive & archive, gpc::fonts::bounding_box &box)
-    {
-        archive(box.x_min, box.x_max, box.y_min, box.y_max);
-	}
 
 	template <class Archive>
 	void serialize(Archive & archive, gpc::fonts::rasterized_font &rfont)
