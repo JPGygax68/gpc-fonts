@@ -61,18 +61,18 @@ namespace gpc {
                 if (count > 0) {
                     auto &var = variants[variant];
                     auto *glyph = &var.glyphs[ find_glyph(*text) ];
-                    x_min = glyph->cbox.x_min;
+                    x_min = glyph->cbox.bounds.x_min;
                     size_t i = 0;
                     int x = 0;
                     while (true) {
                         auto &cbox = glyph->cbox;
-                        y_min = std::min(y_min, cbox.y_min);
-                        y_max = std::max(y_max, cbox.y_max);
+                        y_min = std::min(y_min, cbox.bounds.y_min);
+                        y_max = std::max(y_max, cbox.bounds.y_max);
                         if (++i == count) break;
                         glyph = &var.glyphs[find_glyph(text[i])];
                         x += glyph->cbox.adv_x;
                     }
-                    x_max = x + glyph->cbox.x_max;
+                    x_max = x + glyph->cbox.bounds.x_max;
                 }
 
                 return { x_min, x_max, y_min, y_max };

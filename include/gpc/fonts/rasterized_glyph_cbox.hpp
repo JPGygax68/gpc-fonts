@@ -8,7 +8,8 @@ namespace gpc {
     
         /* Rasterized Glyph Control Box
          */         
-        struct rasterized_glyph_cbox: public bounding_box {
+        struct rasterized_glyph_cbox {
+            bounding_box bounds;
             int adv_x, adv_y;
         };
         
