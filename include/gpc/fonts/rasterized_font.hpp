@@ -69,8 +69,8 @@ namespace gpc {
                         y_min = std::min(y_min, cbox.bounds.y_min);
                         y_max = std::max(y_max, cbox.bounds.y_max);
                         if (++i == count) break;
-                        glyph = &var.glyphs[find_glyph(text[i])];
                         x += glyph->cbox.adv_x;
+                        glyph = &var.glyphs[find_glyph(text[i])];
                     }
                     x_max = x + glyph->cbox.bounds.x_max;
                 }
