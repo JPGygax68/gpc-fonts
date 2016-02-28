@@ -28,20 +28,24 @@ endif()
 
 target_include_directories(${PROJECT_NAME} INTERFACE $<INSTALL_INTERFACE:include> $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>)
 
-add_executable(gpcfonts_testsuite testsuite/test.cpp ${HEADER_FILES})
-target_link_libraries(gpcfonts_testsuite ${PROJECT_NAME})
-
 # Boost
-if (NOT BOOST_ROOT)
-	set(BOOST_ROOT $ENV{BOOST_ROOT})
-endif()
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost REQUIRED COMPONENTS unit_test_framework)
-target_include_directories(gpcfonts_testsuite PRIVATE ${Boost_INCLUDE_DIRS})
-target_link_libraries(gpcfonts_testsuite ${Boost_LIBRARIES})
+option(libGPCFonts_BUILD_TESTSUITE "Build libGPCFonts test suite" OFF)
+if (libGPCFonts_BUILD_TESTSUITE)
 
-add_test(NAME ${PROJECT_NAME}_Test COMMAND gpcfonts_testsuite CONFIGURATIONS Debug)
+  add_executable(gpcfonts_testsuite testsuite/test.cpp ${HEADER_FILES})
+  target_link_libraries(gpcfonts_testsuite ${PROJECT_NAME})
+
+  if (NOT BOOST_ROOT)
+    set(BOOST_ROOT $ENV{BOOST_ROOT})
+  endif()
+  set(Boost_USE_MULTITHREADED ON)
+  set(Boost_USE_STATIC_LIBS ON)
+  find_package(Boost REQUIRED COMPONENTS unit_test_framework)
+  target_include_directories(gpcfonts_testsuite PRIVATE ${Boost_INCLUDE_DIRS})
+  target_link_libraries(gpcfonts_testsuite ${Boost_LIBRARIES})
+
+  add_test(NAME ${PROJECT_NAME}_Test COMMAND gpcfonts_testsuite CONFIGURATIONS Debug)
+endif()
 
 if (0)
 
