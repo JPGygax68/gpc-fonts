@@ -12,6 +12,7 @@ set(HEADER_FILES
   include/gpc/fonts/bounding_box.hpp 
   include/gpc/fonts/rasterized_glyph_cbox.hpp 
   include/gpc/fonts/cereal.hpp
+  include/gpc/fonts/store.hpp
 )
 
 # Create the (main) target
