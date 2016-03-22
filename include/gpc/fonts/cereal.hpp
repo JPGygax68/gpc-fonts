@@ -41,7 +41,7 @@ namespace cereal {
 	template <class Archive>
 	void serialize(Archive & archive, gpc::fonts::rasterized_font &rfont)
 	{
-		archive(rfont.index, rfont.variants);
+		archive(rfont.ranges, rfont.variants);
 	}
 
 } // ns cereal

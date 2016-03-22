@@ -38,18 +38,28 @@ namespace gpc {
                 std::vector<glyph_record> glyphs;
             };
 
-            std::vector<character_range> index;
-            std::vector<variant>        variants;
+            std::vector<character_range>    ranges;
+            std::vector<variant>            variants;
 
             auto find_glyph(uint32_t cp) const -> int {
 
                 size_t base = 0; // base glyph index for current range
-                for (auto range_it = index.begin(); range_it != index.end(); base += (*range_it).count, range_it++)
+                for (auto range_it = ranges.begin(); range_it != ranges.end(); base += (*range_it).count, range_it++)
                     if (cp >= (*range_it).starting_codepoint && cp < ((*range_it).starting_codepoint + (*range_it).count))
                         return base + (cp - (*range_it).starting_codepoint);
                 return -1;
             }
             
+            auto get_glyph(int variant, int index) const -> const glyph_record * {
+
+                return & variants[variant].glyphs[index];
+            }
+
+            auto lookup_glyph(int variant, uint32_t cp) const -> const glyph_record * {
+
+                return get_glyph(variant, find_glyph(cp));
+            }
+
             // TODO: make this capable of working with vertical scripts
             
             auto compute_text_extents(int variant, const char32_t *text, size_t count) const -> bounding_box {
@@ -59,8 +69,7 @@ namespace gpc {
                 int x_min = 0, x_max = 0, y_min = 0, y_max = 0;
 
                 if (count > 0) {
-                    auto &var = variants[variant];
-                    auto *glyph = &var.glyphs[ find_glyph(*text) ];
+                    auto glyph = get_glyph(variant, find_glyph(*text));
                     x_min = glyph->cbox.bounds.x_min;
                     size_t i = 0;
                     int x = 0;
@@ -70,7 +79,7 @@ namespace gpc {
                         y_max = std::max(y_max, cbox.bounds.y_max);
                         if (++i == count) break;
                         x += glyph->cbox.adv_x;
-                        glyph = &var.glyphs[find_glyph(text[i])];
+                        glyph = get_glyph(variant, find_glyph(text[i]));
                     }
                     x_max = x + glyph->cbox.bounds.x_max;
                 }
