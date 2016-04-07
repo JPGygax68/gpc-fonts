@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sstream>
+#include <map>
 
 #include <cereal/archives/binary.hpp>
 
@@ -23,7 +24,14 @@ namespace gpc {
             
             return rastfont;
         }
-        
+
+        inline auto get(const uint8_t *data, size_t size) -> rasterized_font *
+        {
+            static std::map<const uint8_t *, std::unique_ptr<rasterized_font>> map;
+
+            return map.emplace(data, std::make_unique<rasterized_font>(load(data, size))).first->second.get();
+        }
+
     } // ns fonts
     
 } // ns gpc
