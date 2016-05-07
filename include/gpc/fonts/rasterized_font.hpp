@@ -22,6 +22,8 @@ namespace gpc {
 
             The struct is intended to be easy to serialize and de-serialize, containing 
             nothing but trivial or STL types.
+
+            TODO: split up into glyph lookup table and pixel data
         */
 
         struct rasterized_font {
