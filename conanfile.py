@@ -3,6 +3,7 @@ from conans import ConanFile, CMake
 class libGPCFontsConan(ConanFile):
   name = "libGPCFonts"
   version = "0.1.1"
+  url = "https://github.com/JPGygax68/libGPCFonts.git"
   #settings = "os", "compiler", "build_type", "arch"
   #generators = "cmake"
   exports = "include/*"
